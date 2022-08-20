@@ -30,20 +30,26 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+
+        //이메일 형식에 맞지 않은 경우(@가 없거나 .뒤에 영문 외 문자가 들어간 경우)
         if(!(Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$",memberRequestDto.getEmail()))){
-            throw new IllegalArgumentException("이메일 조건을 확인해주세요.");
+            throw new IllegalArgumentException("이메일 조건을 확인해 주세요.");
         }
+        //이미 DB에 존재하는 이메일인 경우
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())){
             throw new IllegalArgumentException("동일한 이메일이 존재합니다.");
         }
+        //닉네임 형식(영문 or 숫자 가능 4~12자리)에 맞지 않은 경우
         if(!(Pattern.matches("[a-zA-Z0-9]*$",memberRequestDto.getNickname()) && (memberRequestDto.getNickname().length() > 3 && memberRequestDto.getNickname().length() <13))){
-            throw new IllegalArgumentException("닉네임 조건을 확인해주세요.");
+            throw new IllegalArgumentException("닉네임 조건을 확인해 주세요.");
         }
+        //이미 DB에 존재하는 닉네임인 경우
         if (memberRepository.existsByNickname(memberRequestDto.getNickname())){
             throw new IllegalArgumentException("동일한 닉네임이 존재합니다.");
         }
+        //비밀번호 형식( (영문 or 숫자) and 특수문자 포함 4~15자리) 에 맞지 않은 경우
         if(!(Pattern.matches("^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\\\(\\\\)\\-_=+]).{3,16}$",memberRequestDto.getPassword()))){
-            throw new IllegalArgumentException("비밀번호 조건을 확인해주세요.");
+            throw new IllegalArgumentException("비밀번호 조건을 확인해 주세요.");
         }
 
 //        if (!memberRequestDto.getPassword().equals(memberRequestDto.getPasswordConfirm()))
@@ -55,8 +61,16 @@ public class AuthService {
 
     @Transactional
     public TokenDto login(MemberRequestDto memberRequestDto) {
+        //이메일 형식에 맞지 않은 경우(@가 없거나 .뒤에 영문 외 문자가 들어간 경우)
+        if(!(Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$",memberRequestDto.getEmail()))){
+            throw new IllegalArgumentException("이메일 조건을 확인해 주세요.");
+        }
+
+        //DB에 해당 이메일이 없는 경우
         if(!memberRepository.findByEmail(memberRequestDto.getEmail()).isPresent())
             throw new IllegalArgumentException("Email이 일치하지 않습니다.");
+
+
 //        if (!memberRepository.existsByEmail(memberRequestDto.getEmail()) ||
 //                !memberRepository.existsByPassword(passwordEncoder.encode(memberRequestDto.getPassword()))) {
 //            throw new RuntimeException("사용자를 찾을 수 없습니다");

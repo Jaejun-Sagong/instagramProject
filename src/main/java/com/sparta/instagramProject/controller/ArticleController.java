@@ -35,7 +35,6 @@ public class ArticleController {  //생성 조회 변경 삭제가 필요한데 
     public void removeS3Image() {
         articleService.removeS3Image();
     }
-
 /////////////////////
 
     @Secured("ROLE_USER")
@@ -65,6 +64,7 @@ public class ArticleController {  //생성 조회 변경 삭제가 필요한데 
     public boolean deleteArticle(@PathVariable Long articleId) {   //RequestBody어노테이션을 써줘야만 Request 안에 Body를 requestDto에 넣어줘야하구나 를 Spring이 안다
         return articleService.delete(articleId);
     }
+
 }
 //    @Secured("ROLE_USER")
 //    @PutMapping("/api/auth/article/{articleId}")

@@ -26,6 +26,6 @@ public class Image {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "article_id", nullable = false)
+    @JoinColumn(name = "article_id")
     private Article article;
 }

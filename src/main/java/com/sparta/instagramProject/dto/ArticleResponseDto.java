@@ -12,11 +12,11 @@ import java.util.List;
 @Setter
 @Builder
 public class ArticleResponseDto {
-    private Long id;
+    private long id;
     private String nickname;
     private String content;
-    private Long commentCnt;
-    private Long heartCnt;
+    private long commentCnt;
+    private long heartCnt;
     private String timeMsg;
     private List<Image> imgList;
     private boolean isLike;

@@ -1,15 +1,16 @@
 package com.sparta.instagramProject.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.sparta.instagramProject.dto.ArticleRequestDto;
 import com.sparta.instagramProject.dto.ArticleResponseDto;
 import com.sparta.instagramProject.dto.S3Dto;
 import com.sparta.instagramProject.image.S3Uploader;
 import com.sparta.instagramProject.model.*;
+import com.sparta.instagramProject.repository.ArticleRepository;
 import com.sparta.instagramProject.repository.DeletedUrlPathRepository;
 import com.sparta.instagramProject.repository.HeartRepository;
-import com.sparta.instagramProject.repository.MemberRepository;
-import com.sparta.instagramProject.repository.ArticleRepository;
+import com.sparta.instagramProject.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor //final로 선언한 변수가 있으면 꼭 생성해달라는 것
@@ -31,13 +30,14 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final S3Uploader s3Uploader;
-    private final AmazonS3 amazonS3Client;
     private final DeletedUrlPathRepository deletedUrlPathRepository;
-    private final MemberRepository memberRepository;
     private final HeartRepository heartRepository;
+    private final ImageRepository imageRepository;
+
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
+
 
 
     public String getNickname() {
@@ -47,8 +47,8 @@ public class ArticleService {
 
     @Transactional
     public Boolean registerArticle(ArticleRequestDto requestDto, List<MultipartFile> multipartFile) throws IOException {
-//        if (multipartFile.isEmpty())
-//            throw new IllegalArgumentException("이미지 파일을 넣어주세요.");
+        if (multipartFile.isEmpty())
+            throw new IllegalArgumentException("이미지 파일을 넣어주세요.");
         if (requestDto.getContent() == null || requestDto.getNickname() == null)
             throw new IllegalArgumentException("내용을 입력하세요");
 
@@ -59,20 +59,18 @@ public class ArticleService {
                 .isLike(false)
                 .build();
         articleRepository.save(article);
-//        if (!multipartFile.isEmpty()) {
-//            for (MultipartFile file : multipartFile) {
-//                S3Dto s3Dto = s3Uploader.upload(file);
-//                Image image = Image.builder()
-//                        .imgUrl(s3Dto.getUploadImageUrl())
-//                        .urlPath(s3Dto.getFileName())
-//                        .article(article)
-//                        .build();
-//                article.addImg(image);
-//            }
-//        }
+        for (MultipartFile file : multipartFile) {
+            S3Dto s3Dto = s3Uploader.upload(file);
+            Image image = Image.builder()
+                    .imgUrl(s3Dto.getUploadImageUrl())
+                    .urlPath(s3Dto.getFileName())
+                    .article(article)
+                    .build();
+            imageRepository.save(image);
+        }
 
         return true;
-    }
+}
 
     //S3 필요없는 곳
     @Transactional
@@ -84,6 +82,8 @@ public class ArticleService {
             article.setTimeMsg(Time.calculateTime(article.getCreatedAt()));
             if (heartRepository.existsByNicknameAndArticle(nickname, article)) {
                 article.setIsLike(true);
+            } else {
+                article.setIsLike(false);
             }
             responseDtos.add(ArticleResponseDto.builder()
                     .id(article.getId())
@@ -108,8 +108,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article showArticleDetail(Long postId) {
-        Article article = articleRepository.findById(postId)
+    public Article showArticleDetail(Long ArticleId) {
+        Article article = articleRepository.findById(ArticleId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         article.setTimeMsg(Time.calculateTime(article.getCreatedAt()));
         List<Comment> commentList = article.getCommentList();
@@ -132,25 +132,24 @@ public class ArticleService {
 //        return article;
 //    }
 
-    public boolean delete(Long postId) {
-        Article article = articleRepository.findById(postId).orElseThrow(
+    public boolean delete(Long ArticleId) {
+        Article article = articleRepository.findById(ArticleId).orElseThrow(
                 () -> new IllegalArgumentException("메모가 존재하지 않습니다")
         );
         if (!getNickname().equals(article.getNickname())) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
 
-        DeletedUrlPath deletedUrlPath = new DeletedUrlPath();
-        List<Image> imageList = article.getImgList();
+
+        List<Image> imageList = imageRepository.findAllByArticle(article);
         for (Image image : imageList) {
+            DeletedUrlPath deletedUrlPath = new DeletedUrlPath();
             deletedUrlPath.setDeletedUrlPath(image.getUrlPath());
             deletedUrlPathRepository.save(deletedUrlPath);
             article.deleteImg(image);
         }
 
-//            removeS3Image();
-
-        articleRepository.deleteById(postId);
+        articleRepository.deleteById(ArticleId);
         return true;
     }
 

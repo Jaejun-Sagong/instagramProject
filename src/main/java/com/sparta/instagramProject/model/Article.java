@@ -2,14 +2,12 @@ package com.sparta.instagramProject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sparta.instagramProject.Timestamped;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,7 +34,7 @@ public class Article { // 생성,수정 시간을 자동으로 만들어줍니�
     @Column
     private Boolean isLike;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
 //    private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     @Column
     private String timeMsg;
@@ -44,7 +42,8 @@ public class Article { // 생성,수정 시간을 자동으로 만들어줍니�
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)  //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
     @JsonManagedReference //DB연관관계 무한회귀 방지
     private List<Image> imgList;
 
@@ -54,19 +53,22 @@ public class Article { // 생성,수정 시간을 자동으로 만들어줍니�
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Heart> heartList;
 
 
     public void addImg(Image image) {
         this.imgList.add(image);
     }
+
     public void deleteImg(Image image) {
         this.imgList.remove(image);
     }
+
     public void addComment(Comment comment) {
         this.commentList.add(comment);
     }
+
     public void deleteComment(Comment comment) {
         commentList.remove(comment);
     }

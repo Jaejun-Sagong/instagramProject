@@ -45,8 +45,6 @@ public class S3Uploader {
         removeNewFile(uploadFile);
         S3Dto s3Dto = new S3Dto(fileName, uploadImageUrl);
 
-
-
         return s3Dto;
     }
 
