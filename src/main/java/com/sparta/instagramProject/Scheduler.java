@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class Scheduler {
     private final ArticleService articleService;
 
-    @Scheduled(cron = "1 0 0 * * *")
+    @Scheduled(cron = "0 0 1 * * *")
     public void removeImage() {
         articleService.removeS3Image();
     }

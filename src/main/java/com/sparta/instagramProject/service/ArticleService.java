@@ -87,9 +87,9 @@ public class ArticleService {
             }
             responseDtos.add(ArticleResponseDto.builder()
                     .id(article.getId())
-                    .commentCnt((long) article.getCommentList().size())
+                    .commentCnt(article.getCommentList().size())
                     .imgList(article.getImgList())
-                    .heartCnt((long) article.getHeartList().size())
+                    .heartCnt(article.getHeartList().size())
                     .content(article.getContent())
                     .timeMsg(article.getTimeMsg())
                     .isLike(article.getIsLike())

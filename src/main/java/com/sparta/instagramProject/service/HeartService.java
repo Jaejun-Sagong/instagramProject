@@ -52,14 +52,14 @@ public class HeartService {
             article.deleteHeart(heart);
 //            article.setIsLike(false);
             heartRepository.delete(heart);
-            heartResponseDto.setIsLike(false);
+            heartResponseDto.setLike(false);
         } else {
             Heart heart = Heart.builder()
                     .article(article)
                     .nickname(nickname)
                     .build();
 //            article.setIsLike(true);
-            heartResponseDto.setIsLike(true);
+            heartResponseDto.setLike(true);
             heartRepository.save(heart);
         }
         heartResponseDto.setHeartCnt(heartRepository.countByArticle(article));
