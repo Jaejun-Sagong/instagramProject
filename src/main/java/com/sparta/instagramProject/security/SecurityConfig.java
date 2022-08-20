@@ -57,14 +57,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
+                .cors().and()
                 .authorizeRequests()
-//                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() // CORS설정 관련 security 열어주기
-                .antMatchers("/api/member/**").permitAll()
-                .antMatchers("/api/camp/**").permitAll()
-                .antMatchers("/api/campDto/**").permitAll()
-                .antMatchers("/api/comment/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/auth/**").authenticated()
+//                .antMatchers("/api/camp/**").permitAll()
+//                .antMatchers("/api/campDto/**").permitAll()
+//                .antMatchers("/api/comment/**").permitAll()
+//                .antMatchers("/api/**").permitAll()
 //                .antMatchers("/api/**").permitAll()
                 .anyRequest().permitAll()   // 나머지 API 는 전부 인증 필요
 
