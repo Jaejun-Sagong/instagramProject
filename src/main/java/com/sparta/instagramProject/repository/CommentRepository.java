@@ -11,8 +11,5 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Comment save(Comment comment);
-    List<Comment> findAllByCamp(Article article);
-
-    List<Comment> findAllByMemberName(String nickname);
 
 }

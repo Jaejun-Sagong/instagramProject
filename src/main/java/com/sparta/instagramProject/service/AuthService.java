@@ -55,10 +55,12 @@ public class AuthService {
 
     @Transactional
     public TokenDto login(MemberRequestDto memberRequestDto) {
-        if (!memberRepository.existsByEmail(memberRequestDto.getEmail()) ||
-                !memberRepository.existsByPassword(passwordEncoder.encode(memberRequestDto.getPassword()))) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다");
-        }
+        if(!memberRepository.findByEmail(memberRequestDto.getEmail()).isPresent())
+            throw new IllegalArgumentException("Email이 일치하지 않습니다.");
+//        if (!memberRepository.existsByEmail(memberRequestDto.getEmail()) ||
+//                !memberRepository.existsByPassword(passwordEncoder.encode(memberRequestDto.getPassword()))) {
+//            throw new RuntimeException("사용자를 찾을 수 없습니다");
+//        }
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
@@ -84,7 +86,7 @@ public class AuthService {
         // 5. 토큰 발급
         return tokenDto;
         } catch (Exception e){
-            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 

@@ -19,7 +19,11 @@ public class Member  {
    private Long id;
 
    @Column(nullable = false, unique = true)
+   private String email;
+
+   @Column(nullable = false, unique = true)
    private String nickname;
+
    @JsonIgnore
    @Column(nullable = false)
    private String password;

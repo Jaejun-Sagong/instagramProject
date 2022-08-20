@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class CampRequestDto {
-    private String title;
-    private String location;
-    private String review;
+public class ArticleRequestDto {
+    private String nickname;
+    private String content;
 }

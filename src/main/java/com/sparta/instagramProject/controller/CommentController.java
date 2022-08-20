@@ -19,16 +19,16 @@ public class CommentController {
     private final CommentRepository commentRepository;
 
     @Secured("ROLE_USER")
-    @PostMapping("/{id}")
-    public Comment addComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto) {
-        return commentService.addComment(id, commentRequestDto);
+    @PostMapping("/{articleId}")
+    public Comment addComment(@PathVariable Long articleId, @RequestBody CommentRequestDto commentRequestDto) {
+        return commentService.addComment(articleId, commentRequestDto);
     }
 
-    @Secured("ROLE_USER")
-    @PutMapping("/{id}/{commentId}")
-    public Comment updateComment(@PathVariable Long id, @PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto) {
-        return commentService.updateComment(id, commentId, commentRequestDto);
-    }
+//    @Secured("ROLE_USER")
+//    @PutMapping("/{id}/{commentId}")
+//    public Comment updateComment(@PathVariable Long id, @PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto) {
+//        return commentService.updateComment(id, commentId, commentRequestDto);
+//    }
 
     @Secured("ROLE_USER")
     @DeleteMapping("/{id}/{commentId}")

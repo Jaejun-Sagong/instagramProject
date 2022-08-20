@@ -1,10 +1,7 @@
 package com.sparta.instagramProject.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +9,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "image")
 @Entity
 public class Image {
@@ -28,6 +26,6 @@ public class Image {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "articleId", nullable = false)
+    @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 }

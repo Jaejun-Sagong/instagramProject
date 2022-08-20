@@ -1,5 +1,8 @@
 package com.sparta.instagramProject.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -11,6 +14,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "heart")
 @Entity
+@AllArgsConstructor
+@Builder
 public class Heart {
 
 
@@ -24,6 +29,7 @@ public class Heart {
     @JoinColumn(name = "articleId")
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action= OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Article article;
 
 }

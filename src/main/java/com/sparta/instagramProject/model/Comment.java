@@ -1,13 +1,13 @@
 package com.sparta.instagramProject.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sparta.instagramProject.Timestamped;
 import com.sparta.instagramProject.dto.CommentRequestDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -15,6 +15,7 @@ import java.time.ZoneId;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "comment")
 @Entity
 public class Comment {
@@ -29,15 +30,13 @@ public class Comment {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    private String timeMsg;
+
+    @CreationTimestamp
+    private Timestamp createdAt;
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "articleId", nullable = false)
     private Article article;
-
-
-    public void setComment(CommentRequestDto commentRequestDto) {
-        this.content = commentRequestDto.getContent();
-    }
 }

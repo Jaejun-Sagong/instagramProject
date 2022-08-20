@@ -34,7 +34,7 @@ public class AuthController {
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         response.setHeader("Refresh-Token", tokenDto.getRefreshToken());
         response.setHeader("Access-Token-Expire-Time", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
-        if(memberRepository.findByUserId(memberRequestDto.getNickname()).isPresent()) {
+        if(memberRepository.findByEmail(memberRequestDto.getEmail()).isPresent()) {
             return true;
         } else{
             return false;

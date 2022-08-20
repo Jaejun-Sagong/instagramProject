@@ -1,4 +1,4 @@
-package com.sparta.instagramProject.image;
+package com.sparta.instagramProject.security;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
