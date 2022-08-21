@@ -4,6 +4,7 @@ import com.sparta.instagramProject.dto.CommentRequestDto;
 import com.sparta.instagramProject.model.Comment;
 import com.sparta.instagramProject.repository.CommentRepository;
 import com.sparta.instagramProject.service.CommentService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ public class CommentController {
 
     private final CommentService commentService;  // 필수적인 요소이기 때문에 final 선언
     private final CommentRepository commentRepository;
+
 
     @Secured("ROLE_USER")
     @PostMapping("/{articleId}")

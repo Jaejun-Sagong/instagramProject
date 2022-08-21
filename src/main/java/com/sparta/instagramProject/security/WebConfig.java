@@ -1,4 +1,4 @@
-package com.sparta.jaejunproject.security;
+package com.sparta.instagramProject.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

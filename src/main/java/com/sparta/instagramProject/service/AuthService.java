@@ -33,7 +33,7 @@ public class AuthService {
 
         //이메일 형식에 맞지 않은 경우(@가 없거나 .뒤에 영문 외 문자가 들어간 경우)
         if(!(Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$",memberRequestDto.getEmail()))){
-            throw new IllegalArgumentException("이메일 조건을 확인해 주세요.");
+            throw new IllegalArgumentException("이메일을 입력해 주세요.");
         }
         //이미 DB에 존재하는 이메일인 경우
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())){
@@ -41,7 +41,7 @@ public class AuthService {
         }
         //닉네임 형식(영문 or 숫자 가능 4~12자리)에 맞지 않은 경우
         if(!(Pattern.matches("[a-zA-Z0-9]*$",memberRequestDto.getNickname()) && (memberRequestDto.getNickname().length() > 3 && memberRequestDto.getNickname().length() <13))){
-            throw new IllegalArgumentException("닉네임 조건을 확인해 주세요.");
+            throw new IllegalArgumentException("닉네임은 4자 이상 12자 이하의 영어와 숫자를 포함해야 합니다.");
         }
         //이미 DB에 존재하는 닉네임인 경우
         if (memberRepository.existsByNickname(memberRequestDto.getNickname())){
@@ -49,7 +49,7 @@ public class AuthService {
         }
         //비밀번호 형식( (영문 or 숫자) and 특수문자 포함 4~15자리) 에 맞지 않은 경우
         if(!(Pattern.matches("^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\\\(\\\\)\\-_=+]).{3,16}$",memberRequestDto.getPassword()))){
-            throw new IllegalArgumentException("비밀번호 조건을 확인해 주세요.");
+            throw new IllegalArgumentException("비밀번호는 4자 이상 15자 이하의 영어와 숫자, 특수문자를 포함해야 합니다.");
         }
 
 //        if (!memberRequestDto.getPassword().equals(memberRequestDto.getPasswordConfirm()))
@@ -83,7 +83,6 @@ public class AuthService {
         try{
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
@@ -94,8 +93,6 @@ public class AuthService {
                 .build();
 
         refreshTokenRepository.save(refreshToken);
-
-        
 
         // 5. 토큰 발급
         return tokenDto;

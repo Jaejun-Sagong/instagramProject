@@ -9,6 +9,8 @@ import com.sparta.instagramProject.repository.MemberRepository;
 import com.sparta.instagramProject.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,16 +31,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Boolean login(@RequestBody MemberRequestDto memberRequestDto, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody MemberRequestDto memberRequestDto, HttpServletResponse response) {
         TokenDto tokenDto = authService.login(memberRequestDto);
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         response.setHeader("Refresh-Token", tokenDto.getRefreshToken());
         response.setHeader("Access-Token-Expire-Time", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
-        if(memberRepository.findByEmail(memberRequestDto.getEmail()).isPresent()) {
-            return true;
-        } else{
-            return false;
-        }
+
+        return ResponseEntity.ok(tokenDto.getNickname());
+
     }
 
 //    @PostMapping("/idCheck")

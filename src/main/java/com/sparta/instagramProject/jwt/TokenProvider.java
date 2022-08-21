@@ -71,6 +71,7 @@ public class TokenProvider {
               .accessToken(accessToken)
               .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
               .refreshToken(refreshToken)
+              .nickname(authentication.getName())
               .build();
    }
 

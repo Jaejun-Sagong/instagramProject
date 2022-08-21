@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class MemberRequestDto {
 //
    private String nickname;
-
    private String email;
    private String password;
 
