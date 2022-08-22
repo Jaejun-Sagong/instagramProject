@@ -1,7 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.3'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-//	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // QueryDSL 플러그인
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // QueryDSL 플러그인
 	id 'java'
 }
 
@@ -27,11 +27,11 @@ dependencies {
 //	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
 	// querydsl 추가 시작
-//	implementation 'com.querydsl:querydsl-jpa'
+	implementation 'com.querydsl:querydsl-jpa'
 	// querydsl 추가 끝
 
 	// SQL 실행 파라미터 로그 기능 추가 시작
-//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
 	// SQL 실행 파라미터 로그 기능 추가 끝
 
 	implementation 'org.json:json:20200518' //JsonOBJECT 관련 의존성
@@ -64,19 +64,19 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
-//// QueryDsl 관련 의존성 추가
-//def querydslDir = "$buildDir/generated/querydsl"
-//querydsl {
-//	jpa = true
-//	querydslSourcesDir = querydslDir
-//}
-//sourceSets {
-//	main.java.srcDir querydslDir
-//}
-//configurations {
-//	querydsl.extendsFrom compileClasspath
-//}
-//compileQuerydsl {
-//	options.annotationProcessorPath = configurations.querydsl
-//}
+// QueryDsl 관련 의존성 추가
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
 // querydsl 설정 추가 끝

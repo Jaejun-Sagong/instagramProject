@@ -52,24 +52,13 @@ public class CommentService {
                 .nickname(nickname)
                 .build();
         commentRepository.save(comment);
+        article.setCommentCnt((long)article.getCommentList().size());
         comment.setTimeMsg(Time.calculateTime(comment.getCreatedAt()));
         return comment;
 
     }
 
-//    @Transactional
-//    public Comment updateComment(Long articleId, Long commentId, CommentRequestDto commentRequestDto) {
-//        if(!articleRepository.findById(articleId).isPresent())
-//            throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다.");
-//        Comment comment = commentRepository.findById(commentId)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
-//
-//        if(!getNickname().equals(comment.getNickname())) {
-//            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
-//        }
-//        comment.setContent(commentRequestDto);
-//        return comment;
-//    }
+
 
     @Transactional
     public Boolean deleteComment(Long articleId, Long commentId) {
@@ -86,12 +75,17 @@ public class CommentService {
         return true;
     }
 
-
-
-
-
-
-
-
 }
-
+//    @Transactional
+//    public Comment updateComment(Long articleId, Long commentId, CommentRequestDto commentRequestDto) {
+//        if(!articleRepository.findById(articleId).isPresent())
+//            throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다.");
+//        Comment comment = commentRepository.findById(commentId)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+//
+//        if(!getNickname().equals(comment.getNickname())) {
+//            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
+//        }
+//        comment.setContent(commentRequestDto);
+//        return comment;
+//    }

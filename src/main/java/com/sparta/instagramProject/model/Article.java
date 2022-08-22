@@ -42,6 +42,7 @@ public class Article { // 생성,수정 시간을 자동으로 만들어줍니�
     @CreationTimestamp
     private Timestamp createdAt;
 
+    private Long commentCnt;
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
     @JsonManagedReference //DB연관관계 무한회귀 방지

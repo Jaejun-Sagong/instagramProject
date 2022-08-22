@@ -22,8 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor //final로 선언한 변수가 있으면 꼭 생성해달라는 것
@@ -45,22 +49,33 @@ public class ArticleService {
     public String getNickname() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
+    public String CreatedAtCustom(Timestamp timestamp){
+        String timestampToString = timestamp.toString();
+//        String timestampToString = "2022-08-21T14:54:46.247+00:00";
+        String customTimestamp = timestampToString.substring(5,10);
+        customTimestamp = customTimestamp.replace("-","월 ");
+        if(customTimestamp.startsWith("0")){
+            customTimestamp = customTimestamp.substring(1);
+        }
+        System.out.println(customTimestamp);
+        return customTimestamp;
+    }
 
 
     @Transactional
-    public Boolean registerArticle(ArticleRequestDto requestDto, List<MultipartFile> multipartFile) throws IOException {
+    public ArticleResponseDto registerArticle(ArticleRequestDto requestDto, List<MultipartFile> multipartFile) throws IOException {
         if (multipartFile.isEmpty())
             throw new IllegalArgumentException("이미지 파일을 넣어주세요.");
         if (requestDto.getContent() == null || requestDto.getNickname() == null)
             throw new IllegalArgumentException("내용을 입력하세요");
-
+        List<Image> imgList = new ArrayList<>();
         String nickname = getNickname();
         Article article = Article.builder()
                 .nickname(nickname)
                 .content(requestDto.getContent())
                 .isLike(false)
                 .build();
-        articleRepository.save(article);
+
         for (MultipartFile file : multipartFile) {
             S3Dto s3Dto = s3Uploader.upload(file);
             Image image = Image.builder()
@@ -68,10 +83,22 @@ public class ArticleService {
                     .urlPath(s3Dto.getFileName())
                     .article(article)
                     .build();
+            imgList.add(image);
             imageRepository.save(image);
         }
+        articleRepository.save(article);
 
-        return true;
+        return ArticleResponseDto.builder()
+                .id(article.getId())
+                .commentCnt(0)
+                .imgList(imgList)
+                .heartCnt(0)
+                .content(article.getContent())
+                .timeMsg("0초 전")
+                .isLike(false)
+                .nickname(nickname)
+                .createdAt(CreatedAtCustom(article.getCreatedAt()))
+                .build();
 }
 
     //S3 필요없는 곳
@@ -96,7 +123,7 @@ public class ArticleService {
                     .timeMsg(article.getTimeMsg())
                     .isLike(article.getIsLike())
                     .nickname(article.getNickname())
-                    .createdAt(article.getCreatedAt())
+                    .createdAt(CreatedAtCustom(article.getCreatedAt()))
                     .build());
         }
 //        List<Camp> campList = postRepository.findAll();
@@ -106,11 +133,11 @@ public class ArticleService {
 //            campDtos.add(camp);
 //        }
 //        return campDtos;
-        return responseDtos;
+        return responseDtos.stream().sorted(Comparator.comparing(ArticleResponseDto::getId).reversed()).collect(Collectors.toList());
     }
 
     @Transactional
-    public Article showArticleDetail(Long ArticleId) {
+    public ArticleResponseDto showArticleDetail(Long ArticleId) {
         Article article = articleRepository.findById(ArticleId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         article.setTimeMsg(Time.calculateTime(article.getCreatedAt()));
@@ -118,7 +145,17 @@ public class ArticleService {
         for (Comment comment : commentList) {
             comment.setTimeMsg(Time.calculateTime(comment.getCreatedAt()));
         }
-        return article;
+        return ArticleResponseDto.builder()
+                .id(article.getId())
+                .nickname(article.getNickname())
+                .content(article.getContent())
+                .imgList(article.getImgList())
+                .commentList(article.getCommentList())
+                .heartCnt(article.getHeartList().size())
+                .timeMsg(article.getTimeMsg())
+                .isLike(article.getIsLike())
+                .createdAt(CreatedAtCustom(article.getCreatedAt()))
+                .build();
     }
 
 
@@ -134,8 +171,8 @@ public class ArticleService {
 //        return article;
 //    }
 
-    public boolean delete(Long ArticleId) {
-        Article article = articleRepository.findById(ArticleId).orElseThrow(
+    public Long delete(Long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(
                 () -> new IllegalArgumentException("메모가 존재하지 않습니다")
         );
         if (!getNickname().equals(article.getNickname())) {
@@ -151,8 +188,8 @@ public class ArticleService {
             article.deleteImg(image);
         }
 
-        articleRepository.deleteById(ArticleId);
-        return true;
+        articleRepository.deleteById(articleId);
+        return articleId;
     }
 
     public void removeS3Image() {

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,17 @@ public class MyPageService {
     private final HeartRepository heartRepository;
     private final ArticleRepository articleRepository;
 
+    public String CreatedAtCustom(Timestamp timestamp){
+        String timestampToString = timestamp.toString();
+//        String timestampToString = "2022-08-21T14:54:46.247+00:00";
+        String customTimestamp = timestampToString.substring(5,10);
+        customTimestamp = customTimestamp.replace("-","월 ");
+        if(customTimestamp.startsWith("0")){
+            customTimestamp = customTimestamp.substring(1);
+        }
+        System.out.println(customTimestamp);
+        return customTimestamp;
+    }
 
     public List<ArticleResponseDto> getMyArticlePage(UserDetails userDetails) {
         String nickname = userDetails.getUsername();
@@ -42,7 +54,7 @@ public class MyPageService {
                     .timeMsg(article.getTimeMsg())
                     .isLike(article.getIsLike())
                     .nickname(article.getNickname())
-                    .createdAt(article.getCreatedAt())
+                    .createdAt(CreatedAtCustom(article.getCreatedAt()))
                     .build());
         }
         return responseDtos;
@@ -65,7 +77,7 @@ public class MyPageService {
                     .timeMsg(article.getTimeMsg())
                     .isLike(true)
                     .nickname(article.getNickname())
-                    .createdAt(article.getCreatedAt())
+                    .createdAt(CreatedAtCustom(article.getCreatedAt()))
                     .build());
         }
         return responseDtos;

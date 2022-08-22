@@ -41,7 +41,7 @@ public class ArticleController {  //생성 조회 변경 삭제가 필요한데 
 
     @Secured("ROLE_USER")
     @PostMapping(value = "/api/auth/article", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Boolean registerArticle(@Valid @RequestPart(value = "dto") ArticleRequestDto requestDto,
+    public ArticleResponseDto registerArticle(@Valid @RequestPart(value = "dto") ArticleRequestDto requestDto,
                                 @RequestPart(required = false) List<MultipartFile> multipartFile) throws IOException {
 
         return articleService.registerArticle(requestDto, multipartFile);
@@ -58,13 +58,13 @@ public class ArticleController {  //생성 조회 변경 삭제가 필요한데 
 
 
     @GetMapping("/api/auth/article/{articleId}")
-    public Article showArticleDetail(@PathVariable Long articleId) {
+    public ArticleResponseDto showArticleDetail(@PathVariable Long articleId) {
         return articleService.showArticleDetail(articleId);
     }
 
     @Secured("ROLE_USER")
     @DeleteMapping("/api/auth/article/{articleId}")
-    public boolean deleteArticle(@PathVariable Long articleId) {   //RequestBody어노테이션을 써줘야만 Request 안에 Body를 requestDto에 넣어줘야하구나 를 Spring이 안다
+    public Long deleteArticle(@PathVariable Long articleId) {   //RequestBody어노테이션을 써줘야만 Request 안에 Body를 requestDto에 넣어줘야하구나 를 Spring이 안다
         return articleService.delete(articleId);
     }
 

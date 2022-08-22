@@ -63,6 +63,7 @@ public class HeartService {
             heartRepository.save(heart);
         }
         heartResponseDto.setHeartCnt(heartRepository.countByArticle(article));
+        heartResponseDto.setArticleId(articleId);
 
         return heartResponseDto;
     }

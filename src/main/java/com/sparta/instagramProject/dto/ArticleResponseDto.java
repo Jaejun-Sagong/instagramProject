@@ -1,5 +1,6 @@
 package com.sparta.instagramProject.dto;
 
+import com.sparta.instagramProject.model.Comment;
 import com.sparta.instagramProject.model.Image;
 import lombok.*;
 
@@ -16,9 +17,10 @@ public class ArticleResponseDto {
     private String nickname;
     private String content;
     private long commentCnt;
+    private List<Comment> commentList;
     private long heartCnt;
     private String timeMsg;
     private List<Image> imgList;
     private boolean isLike;
-    private Timestamp createdAt;
+    private String createdAt;
 }

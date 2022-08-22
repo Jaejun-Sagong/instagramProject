@@ -14,4 +14,5 @@ public class JaejunProjectApplication {
 		SpringApplication.run(JaejunProjectApplication.class, args);
 	}
 
+
 }

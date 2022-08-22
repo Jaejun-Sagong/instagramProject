@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class HeartResponseDto {
+    private long articleId;
     private long heartCnt;
     private boolean isLike;
 }
