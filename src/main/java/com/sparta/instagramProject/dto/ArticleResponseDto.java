@@ -2,15 +2,16 @@ package com.sparta.instagramProject.dto;
 
 import com.sparta.instagramProject.model.Comment;
 import com.sparta.instagramProject.model.Image;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
+@Data
 @Builder
 public class ArticleResponseDto {
     private long id;
@@ -23,4 +24,5 @@ public class ArticleResponseDto {
     private List<Image> imgList;
     private boolean isLike;
     private String createdAt;
+
 }

@@ -24,25 +24,18 @@ public class Article { // 생성,수정 시간을 자동으로 만들어줍니�
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private String content;
-
     @Column
     private String nickname;
-
     @Column
     private Boolean isLike;
-
-    //    @Column(nullable = false)
-//    private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     @Column
     private String timeMsg;
-
     @CreationTimestamp
     private Timestamp createdAt;
-
     private Long commentCnt;
+    private Long heartCnt;
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
     @JsonManagedReference //DB연관관계 무한회귀 방지

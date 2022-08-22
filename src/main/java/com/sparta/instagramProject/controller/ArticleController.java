@@ -3,9 +3,12 @@ package com.sparta.instagramProject.controller;
 import com.sparta.instagramProject.dto.ArticleRequestDto;
 import com.sparta.instagramProject.dto.ArticleResponseDto;
 import com.sparta.instagramProject.model.Article;
+import com.sparta.instagramProject.repository.ArticleRepository;
 import com.sparta.instagramProject.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +31,7 @@ public class ArticleController {  //생성 조회 변경 삭제가 필요한데 
 
     private final ArticleService articleService;
 //    private final TokenProvider tokenProvider;
-
+    private final ArticleRepository articleRepository;
 
     /////////////////////
 //, consumes = {MediaType.ALL_VALUE}
@@ -56,6 +59,13 @@ public class ArticleController {  //생성 조회 변경 삭제가 필요한데 
         return articleService.getArticles(username);
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping("/api/auth/articlePage")
+    public Slice<ArticleResponseDto> getArticleScroll(HttpServletResponse response, Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        response.setHeader("nickname", username);
+        return articleRepository.getArticleScroll(pageable);
+    }
 
     @GetMapping("/api/auth/article/{articleId}")
     public ArticleResponseDto showArticleDetail(@PathVariable Long articleId) {
