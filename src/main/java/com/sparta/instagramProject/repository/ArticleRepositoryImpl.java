@@ -42,6 +42,7 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
                 .selectFrom(article)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
+                .orderBy(article.id.desc())
                 .fetchResults();
 
         List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
