@@ -47,7 +47,7 @@ public class Article { // 생성,수정 시간을 자동으로 만들어줍니�
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
-//    @JsonManagedReference
+//    @JsonManagedReference   (어차피 JsonIgnore을 사용할꺼면 무한회귀를 생각안해도 되고 이 어노테이션을 할 경우 Jsonignore가 안먹는다.)
     private List<Heart> heartList;
 
 

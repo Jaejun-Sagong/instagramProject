@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -137,9 +138,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponseDto showArticleDetail(Long ArticleId) {
+    public ArticleResponseDto showArticleDetail(Long ArticleId, UserDetails userDetails) {
         Article article = articleRepository.findById(ArticleId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        String nickname = userDetails.getUsername();
         article.setTimeMsg(Time.calculateTime(article.getCreatedAt()));
         List<Comment> commentList = article.getCommentList();
         for (Comment comment : commentList) {
@@ -153,7 +155,7 @@ public class ArticleService {
                 .commentList(article.getCommentList())
                 .heartCnt(article.getHeartList().size())
                 .timeMsg(article.getTimeMsg())
-                .isLike(article.getIsLike())
+                .isLike(heartRepository.findByNicknameAndArticle(nickname, article).isPresent())
                 .createdAt(CreatedAtCustom(article.getCreatedAt()))
                 .build();
     }

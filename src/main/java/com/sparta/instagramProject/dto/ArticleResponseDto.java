@@ -2,16 +2,14 @@ package com.sparta.instagramProject.dto;
 
 import com.sparta.instagramProject.model.Comment;
 import com.sparta.instagramProject.model.Image;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class ArticleResponseDto {
     private long id;

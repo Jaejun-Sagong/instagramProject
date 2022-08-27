@@ -26,26 +26,12 @@ public class CommentController {
         return commentService.addComment(articleId, commentRequestDto);
     }
 
-//    @Secured("ROLE_USER")
-//    @PutMapping("/{id}/{commentId}")
-//    public Comment updateComment(@PathVariable Long id, @PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto) {
-//        return commentService.updateComment(id, commentId, commentRequestDto);
-//    }
-
     @Secured("ROLE_USER")
     @DeleteMapping("/{id}/{commentId}")
     public Boolean deleteComment(@PathVariable Long id, @PathVariable Long commentId) {
         return commentService.deleteComment(id, commentId);
     }
 
-
-
-
 }
 
 
-//    @GetMapping("/api/memos")
-//    public List<Memo> readMemo(){
-//        return memoRepository.findAllByOrderByModifiedAtDesc();
-//    }
-//}

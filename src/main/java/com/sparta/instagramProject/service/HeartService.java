@@ -50,7 +50,7 @@ public class HeartService {
         if (isAlreadyHeartToArticle(nickname, article)) {
             Heart heart = heartRepository.findByNicknameAndArticle(nickname, article).get();
             article.deleteHeart(heart);
-            article.setIsLike(false);
+//            article.setIsLike(false);
             heartRepository.delete(heart);
             heartResponseDto.setLike(false);
         } else {
@@ -58,7 +58,7 @@ public class HeartService {
                     .article(article)
                     .nickname(nickname)
                     .build();
-            article.setIsLike(true);
+//            article.setIsLike(true);
             heartResponseDto.setLike(true);
             heartRepository.save(heart);
         }

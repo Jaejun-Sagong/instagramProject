@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final MemberRepository memberRepository;
 
 
 
@@ -41,10 +40,6 @@ public class AuthController {
 
     }
 
-//    @PostMapping("/idCheck")
-//    public Boolean idCheck(@RequestBody MemberRequestDto memberRequestDto) {
-//        return authService.idCheck(memberRequestDto);
-//    }
     @PostMapping("/reissue")  //재발급을 위한 로직
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return ResponseEntity.ok(authService.reissue(tokenRequestDto));

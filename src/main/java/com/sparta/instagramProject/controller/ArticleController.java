@@ -49,27 +49,18 @@ public class ArticleController {  //생성 조회 변경 삭제가 필요한데 
 
         return articleService.registerArticle(requestDto, multipartFile);
     }
-//
-//    @Secured("ROLE_USER")
-//    @GetMapping("/api/auth/article")
-//    public List<ArticleResponseDto> getArticles(HttpServletResponse response, @AuthenticationPrincipal UserDetails userDetails) {
-//        String username = userDetails.getUsername();
-//        System.out.println(username);
-//        response.setHeader("nickname", username);
-//        return articleService.getArticles(username);
-//    }
 
     @Secured("ROLE_USER")
     @GetMapping("/api/auth/article")
     public Slice<ArticleResponseDto> getArticleScroll(HttpServletResponse response, Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        response.setHeader("nickname", username);
-        return articleRepository.getArticleScroll(pageable);
+        String nickname = userDetails.getUsername();
+        response.setHeader("nickname", nickname);
+        return articleRepository.getArticleScroll(pageable, nickname);
     }
 
     @GetMapping("/api/auth/article/{articleId}")
-    public ArticleResponseDto showArticleDetail(@PathVariable Long articleId) {
-        return articleService.showArticleDetail(articleId);
+    public ArticleResponseDto showArticleDetail(@PathVariable Long articleId, @AuthenticationPrincipal UserDetails userDetails) {
+        return articleService.showArticleDetail(articleId, userDetails);
     }
 
     @Secured("ROLE_USER")
